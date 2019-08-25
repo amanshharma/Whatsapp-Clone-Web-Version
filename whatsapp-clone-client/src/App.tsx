@@ -1,7 +1,7 @@
-import React from 'react';
-import ChatListScreen from './components/ChatListScreen';
+import React from "react";
+import ChatListScreen from "./components/ChatListScreen";
 
-import './App.scss';
+import "./App.scss";
 
 const App: React.FC = () => {
   return (
@@ -11,6 +11,6 @@ const App: React.FC = () => {
       </header>
     </div>
   );
-}
+};
 
 export default App;

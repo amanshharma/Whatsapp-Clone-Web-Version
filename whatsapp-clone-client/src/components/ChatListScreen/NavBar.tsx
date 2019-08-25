@@ -1,10 +1,8 @@
-import React from 'react';
-import styles from './NavBar.module.scss';
+import React from "react";
+import { Toolbar } from "@material-ui/core";
 
-const NavBar: React.FC = () => (
-  <div className={styles.container}>
-    <p className="header">Heading</p>
-  </div>
-);
+import styles from "./NavBar.module.scss";
+
+const NavBar: React.FC = () => <Toolbar>Whatapp Clone</Toolbar>;
 
 export default NavBar;
