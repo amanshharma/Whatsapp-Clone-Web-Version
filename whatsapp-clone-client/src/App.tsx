@@ -1,7 +1,7 @@
 import React from 'react';
 import ChatListScreen from './components/ChatListScreen';
 
-import './App.css';
+import './App.scss';
 
 const App: React.FC = () => {
   return (
