@@ -1,40 +1,21 @@
 import express from "express";
+import { ApolloServer, gql } from "apollo-server-express";
 import cors from "cors";
 import { chats } from "./data";
+import schema from "./schema";
 
 const app = express();
 app.use(cors());
-
-// app.use(function(req, res, next) {
-//   // Website you wish to allow to connect
-//   res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-
-//   // Request methods you wish to allow
-//   res.setHeader(
-//     "Access-Control-Allow-Methods",
-//     "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-//   );
-
-// Request headers you wish to allow
-//   res.setHeader(
-//     "Access-Control-Allow-Headers",
-//     "X-Requested-With,content-type"
-//   );
-
-//   // Set to true if you need the website to include cookies in the requests sent
-//   // to the API (e.g. in case you use sessions)
-//   res.setHeader("Access-Control-Allow-Credentials", true);
-
-//   // Pass to next layer of middleware
-//   next();
-// });
+app.use(express.json());
 
 app.get("/_ping", (req, res) => {
   res.send("pong");
 });
 
-app.get("/_chats", (req, res) => {
-  res.send(chats);
+const server = new ApolloServer({ schema });
+server.applyMiddleware({
+  app,
+  path: "/graphql"
 });
 
 const port = process.env.PORT || 4000;
