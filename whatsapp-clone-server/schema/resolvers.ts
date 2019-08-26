@@ -1,7 +1,13 @@
 import { GraphQLDateTime } from "graphql-iso-date";
-import { chats } from "../db";
+import { chats, messages } from "../data";
+
 const resolvers = {
   Date: GraphQLDateTime,
+  Chat: {
+    lastMessage(chat: any) {
+      return messages.find(m => m.id === chat.lastMessage);
+    }
+  },
   Query: {
     chats() {
       return chats;

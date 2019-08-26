@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useMemo } from "react";
 import { List, ListItem } from "@material-ui/core";
 import moment from "moment";
 import axios from "axios";
@@ -7,11 +7,36 @@ import styles from "./ChatList.module.scss";
 
 const ChatList: React.FC = () => {
   const [chats, setChats] = useState(undefined);
+  const getChatsQuery = `
+  query GetChats {
+    chats {
+      id
+      name
+      picture
+      lastMessage {
+        id
+        content
+        createdAt
+      }
+    }
+  }
+`;
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:4000/_chats")
-      .then(chats => setChats(chats.data));
+  useMemo(() => {
+    const fetchChats = async () => {
+      const body = await fetch(`${process.env.REACT_APP_SERVER_URL}/graphql`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ query: getChatsQuery })
+      });
+      const {
+        data: { chats }
+      } = await body.json();
+      setChats(chats);
+    };
+    fetchChats();
   }, []);
 
   return (
