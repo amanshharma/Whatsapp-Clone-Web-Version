@@ -22,7 +22,7 @@ const ChatList: React.FC = () => {
   }
 `;
 
-  useMemo(() => {
+  useEffect(() => {
     const fetchChats = async () => {
       const body = await fetch(`${process.env.REACT_APP_SERVER_URL}/graphql`, {
         method: "POST",
@@ -46,14 +46,16 @@ const ChatList: React.FC = () => {
           {chats.map(item => {
             return (
               <ListItem key={item.id}>
-                <img src={item.picture} alt={item.name} />
-                <p className={styles.leftMargin}>{item.name}</p>
+                <img src={item.picture} data-testid="picture" alt={item.name} />
+                <p className={styles.leftMargin} data-testid="name">
+                  {item.name}
+                </p>
                 {item.lastMessage && (
                   <Fragment>
-                    <p className={styles.leftMargin}>
+                    <p className={styles.leftMargin} data-testid="content">
                       {item.lastMessage.content}
                     </p>
-                    <p className={styles.leftMargin}>
+                    <p className={styles.leftMargin} data-testid="date">
                       {moment(item.lastMessage.createdAt).format("HH:mm")}
                     </p>
                   </Fragment>
