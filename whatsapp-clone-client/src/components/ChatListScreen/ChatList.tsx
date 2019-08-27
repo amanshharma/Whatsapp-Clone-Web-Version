@@ -1,12 +1,24 @@
-import React, { Fragment, useState, useEffect, useMemo } from "react";
+import React, {
+  Fragment,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback
+} from "react";
 import { List, ListItem } from "@material-ui/core";
 import moment from "moment";
+import { History } from "history";
 import axios from "axios";
 
 import styles from "./ChatList.module.scss";
 
-const ChatList: React.FC = () => {
+interface ChatsListProps {
+  history: History;
+}
+
+const ChatList: React.FC<ChatsListProps> = ({ history }) => {
   const [chats, setChats] = useState(undefined);
+
   const getChatsQuery = `
   query GetChats {
     chats {
@@ -39,13 +51,25 @@ const ChatList: React.FC = () => {
     fetchChats();
   }, []);
 
+  const navToChat = useCallback(
+    chatId => {
+      console.log("hey");
+      history.push(`${chatId}`);
+    },
+    [history]
+  );
+
   return (
     <div className="container">
       {!!chats && (
         <List>
           {chats.map(item => {
             return (
-              <ListItem key={item.id}>
+              <ListItem
+                key={item.id}
+                button
+                onClick={navToChat.bind(null, item.id)}
+              >
                 <img src={item.picture} data-testid="picture" alt={item.name} />
                 <p className={styles.leftMargin} data-testid="name">
                   {item.name}

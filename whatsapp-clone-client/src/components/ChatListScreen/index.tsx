@@ -2,9 +2,9 @@ import React from "react";
 import ChatList from "./ChatList";
 import NavBar from "./NavBar";
 
-export default () => (
+export default ({ history }) => (
   <div className="wrapper">
     <NavBar></NavBar>
-    <ChatList></ChatList>
+    <ChatList history={history}></ChatList>
   </div>
 );
