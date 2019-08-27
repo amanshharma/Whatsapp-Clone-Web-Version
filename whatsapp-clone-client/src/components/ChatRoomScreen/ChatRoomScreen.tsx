@@ -1,5 +1,7 @@
 import React from "react";
 import { useMemo, useState } from "react";
+import { Input, Button } from "@material-ui/core";
+
 const getChatQuery = `
   query GetChat($chatId: ID!) {
     chat(chatId: $chatId) {
@@ -32,6 +34,19 @@ type OptionalChatQueryResult = ChatQueryResult | null;
 
 const ChatRoomScreen: React.FC<ChatRoomScreenParams> = ({ chatId }) => {
   const [chat, setChat] = useState<OptionalChatQueryResult>(null);
+  const [message, setMessage] = useState("");
+
+  const onChange = ({ target }) => {
+    console.log(target.value);
+    setMessage(target.value);
+  };
+
+  const sendMessage = () => {
+    console.log("chat -- ", chat);
+    const msg = { id: "21", content: message, createdAt: new Date() };
+    setChat({ ...chat, messages: chat.messages.concat(msg) });
+  };
+
   useMemo(async () => {
     const body = await fetch(`${process.env.REACT_APP_SERVER_URL}/graphql`, {
       method: "POST",
@@ -59,10 +74,18 @@ const ChatRoomScreen: React.FC<ChatRoomScreenParams> = ({ chatId }) => {
         {chat.messages.map(message => (
           <li key={message.id}>
             <div>{message.content}</div>
-            <div>{message.createdAt}</div>
+            <div>{message.createdAt.toDateString}</div>
           </li>
         ))}
       </ul>
+      <Input
+        placeholder="Enter your message"
+        onChange={onChange}
+        value={message}
+      ></Input>
+      <Button size="medium" color="primary" onClick={sendMessage}>
+        Send
+      </Button>
     </div>
   );
 };

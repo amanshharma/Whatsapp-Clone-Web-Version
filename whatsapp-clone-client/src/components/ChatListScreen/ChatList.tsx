@@ -54,7 +54,7 @@ const ChatList: React.FC<ChatsListProps> = ({ history }) => {
   const navToChat = useCallback(
     chatId => {
       console.log("hey");
-      history.push(`${chatId}`);
+      history.push(`chats/${chatId}`);
     },
     [history]
   );
