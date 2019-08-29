@@ -1,8 +1,10 @@
 import React from "react";
+import gql from "graphql-tag";
 import { useMemo, useState } from "react";
 import { Input, Button } from "@material-ui/core";
+import { useApolloClient, useQuery } from "@apollo/react-hooks";
 
-const getChatQuery = `
+const getChatQuery = gql`
   query GetChat($chatId: ID!) {
     chat(chatId: $chatId) {
       id
@@ -47,22 +49,23 @@ const ChatRoomScreen: React.FC<ChatRoomScreenParams> = ({ chatId }) => {
     setChat({ ...chat, messages: chat.messages.concat(msg) });
   };
 
-  useMemo(async () => {
-    const body = await fetch(`${process.env.REACT_APP_SERVER_URL}/graphql`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        query: getChatQuery,
-        variables: { chatId }
-      })
-    });
-    const {
-      data: { chat }
-    } = await body.json();
-    setChat(chat);
-  }, [chatId]);
+  // useMemo(async () => {
+  //   const body = await fetch(`${process.env.REACT_APP_SERVER_URL}/graphql`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json"
+  //     },
+  //     body: JSON.stringify({
+  //       query: getChatQuery,
+  //       variables: { chatId }
+  //     })
+  //   });
+  //   const {
+  //     data: { chat }
+  //   } = await body.json();
+  //   setChat(chat);
+  // }, [chatId]);
+  const { data } = useQuery<any>(getChatQuery, { variables: { chatId } });
 
   if (!chat) return null;
 

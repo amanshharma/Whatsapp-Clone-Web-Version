@@ -20,7 +20,7 @@ interface ChatsListProps {
 
 const ChatList: React.FC<ChatsListProps> = ({ history }) => {
   //const [chats, setChats] = useState(undefined);
-  const client = useApolloClient();
+  //const client = useApolloClient();
 
   const getChatsQuery = gql`
     query GetChats {
