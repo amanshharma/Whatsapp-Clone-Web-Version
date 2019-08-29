@@ -48,23 +48,6 @@ const ChatRoomScreen: React.FC<ChatRoomScreenParams> = ({ chatId }) => {
     const msg = { id: "21", content: message, createdAt: new Date() };
     setChat({ ...chat, messages: chat.messages.concat(msg) });
   };
-
-  // useMemo(async () => {
-  //   const body = await fetch(`${process.env.REACT_APP_SERVER_URL}/graphql`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json"
-  //     },
-  //     body: JSON.stringify({
-  //       query: getChatQuery,
-  //       variables: { chatId }
-  //     })
-  //   });
-  //   const {
-  //     data: { chat }
-  //   } = await body.json();
-  //   setChat(chat);
-  // }, [chatId]);
   const { data } = useQuery<any>(getChatQuery, { variables: { chatId } });
 
   if (!chat) return null;
