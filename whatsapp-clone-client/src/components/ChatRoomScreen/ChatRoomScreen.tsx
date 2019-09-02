@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useCallback } from "react";
 import gql from "graphql-tag";
 import { useMemo, useState } from "react";
 import { Input, Button } from "@material-ui/core";
 import { useApolloClient, useQuery } from "@apollo/react-hooks";
+import client from "../../client";
 
 const getChatQuery = gql`
   query GetChat($chatId: ID!) {
@@ -43,12 +44,41 @@ const ChatRoomScreen: React.FC<ChatRoomScreenParams> = ({ chatId }) => {
     setMessage(target.value);
   };
 
+  //todo use useCallback here
   const sendMessage = () => {
     console.log("chat -- ", chat);
-    const msg = { id: "21", content: message, createdAt: new Date() };
-    setChat({ ...chat, messages: chat.messages.concat(msg) });
+    const newMessage = {
+      id: "21",
+      content: message,
+      createdAt: new Date(),
+      __typename: "Chat"
+    };
+    //setChat({ ...chat, messages: chat.messages.concat(msg) });
+    client.writeQuery({
+      query: getChatQuery,
+      variables: { chatId },
+      data: {
+        chat: {
+          ...chat,
+          messages: chat.messages.concat(newMessage)
+        }
+      }
+    });
   };
+
   const { data } = useQuery<any>(getChatQuery, { variables: { chatId } });
+  console.log("*****", data);
+
+  if (!chat) {
+    if (data.chat) {
+      console.log("data -- ", data);
+      setChat(data.chat);
+    }
+  }
+
+  useEffect(() => {}, [data]);
+
+  // /useCallback(() => sendMessage(data.chat), [data.chat]);
 
   if (!chat) return null;
 
